@@ -23,7 +23,8 @@
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301, USA
 //
 
-#include <cstdlib>			// Needed for std::abort()
+#include <exception>        // Needed for std::set_terminate()
+#include <cstdlib>          // Needed for std::abort()
 
 #include "config.h"			// Needed for HAVE_CXXABI and HAVE_EXECINFO
 

@@ -1,0 +1,66 @@
+name: amule
+base: core22
+version: '2.3.3'
+summary: All-platform eMule P2P Client
+description: |
+  aMule stands for all-platform eMule file-sharing program. It is affiliated with the eMule project and was forked from xMule on 08/2003. It connects to the eDonkey2000 network, supports Linux, Mac, Solaris, *BSD platforms, and nearly every processor arch.
+license: Proprietary
+icon: amule.png
+
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # devmode # use 'strict' once you have the right plugs and slots
+
+compression: xz # lzo
+
+architectures:
+  - build-on: arm64
+  - build-on: armhf
+  - build-on: amd64
+
+parts:
+  wxwidgets:
+    source-type: git
+    source: https://github.com/wxWidgets/wxWidgets.git
+    source-tag: 'v2.8.12'
+    plugin: make
+    build-packages: [ libexpat1-dev, libmspack-dev ]
+    override-build: |
+      ./configure CXXFLAGS="-g -std=c++03" --enable-unicode --enable-debug
+      make CXXFLAGS="-g -std=c++03"
+      make install
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/lib
+      mv $SNAPCRAFT_PART_BUILD/lib/* $SNAPCRAFT_PART_INSTALL/usr/lib
+  amule:
+    source-type: git
+    source: https://github.com/tokkenno/amule.git
+    source-tag: master
+    plugin: cmake
+    after: [wxwidgets]
+    build-packages:
+      - g++
+      - ninja-build
+      - gettext
+      - binutils-dev
+      - libcrypto++-dev
+      - libgtk2.0-dev
+      - libxpm-dev
+      - libgeoip-dev
+      - libupnp-dev
+      - libboost-dev
+      - zlib1g-dev
+      - autopoint
+    stage-packages:
+      - libgeoip1
+      - libupnp13
+      - libcrypto++8
+    build-environment:
+      - LANG: 'en_US.UTF-8'
+      - LC_ALL: 'en_US.UTF-8'
+    override-build: |
+      cmake -GNinja -DCMAKE_CXX_STANDARD=11 ../src
+      ninja
+      mkdir $SNAPCRAFT_PART_INSTALL/usr/bin
+      mv $SNAPCRAFT_PART_BUILD/src/amule $SNAPCRAFT_PART_INSTALL/usr/bin
+apps:
+  amule:
+    command: usr/bin/amule

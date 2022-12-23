@@ -88,7 +88,7 @@ WxCasPrefs::WxCasPrefs ( wxWindow * parent ) : wxDialog ( parent, -1,
 	                                       WxCasCte::DEFAULT_REFRESH_RATE ) );
 	m_refreshStaticText =
 	    new wxStaticText ( this, -1, _( "Refresh rate interval in seconds" ), wxDefaultPosition,
-	                       wxDefaultSize, wxALIGN_CENTRE );
+	                       wxDefaultSize, wxALIGN_CENTER );
 	m_refreshSBoxSizer->Add ( m_refreshSpinButton, 0, wxALL | wxALIGN_CENTER, 5 );
 	m_refreshSBoxSizer->Add ( m_refreshStaticText, 1, wxALL | wxALIGN_CENTER, 5 );
 
